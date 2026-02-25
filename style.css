@@ -159,52 +159,50 @@ h1 {
 
 /* ===== 모바일 ===== */
 @media (max-width: 700px) {
-  /* ✅ 가로 유지 강제 */
-  #song-container{
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    gap: 10px;
-    width: 100%;
-    padding: 0 8px;
-    align-items: stretch;
+
+  #song-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;   /* 🔥 줄바꿈 방지 핵심 */
+    gap: 6px;
+    padding: 0 6px;
   }
 
-  /* ✅ 3개(왼-중-오) 화면에 다 들어오게 */
-  .song{
-    flex: 1 1 0;
-    padding: 8px;
-    min-width: 0; /* 텍스트 때문에 넓어지는 것 방지 */
+  /* 왼쪽/오른쪽 카드 */
+  .song {
+    flex: 1;
+    padding: 6px;
   }
 
-  /* 썸네일 너무 커지지 않게 */
-  .song img{
+  /* 썸네일 줄이기 */
+  .song img {
     width: 100%;
     aspect-ratio: 1/1;
   }
 
-  /* 버튼 더 작게 */
-  #left, #right{
-    padding: 10px;
-    font-size: 13px;
+  /* 버튼 줄이기 */
+  #left, #right {
+    padding: 8px;
+    font-size: 12px;
+    line-height: 1.2;
   }
 
-  /* 가운데 VS 영역 폭 줄이기 */
-  .middle{
-    width: 70px;
-    padding: 6px;
-    gap: 6px;
+  /* 가운데 영역 강제 축소 */
+  .middle {
+    width: 50px;        /* 🔥 핵심 */
+    min-width: 50px;
+    padding: 4px;
+    gap: 4px;
   }
 
-  #vs{
-    font-size: 18px;
-    line-height: 1;
+  #vs {
+    font-size: 14px;
   }
 
-  #tie, #undo{
-    width: 70px;
-    height: 32px;
-    font-size: 11px;
+  #tie, #undo {
+    width: 50px;
+    height: 28px;
+    font-size: 9px;
   }
 }
 
