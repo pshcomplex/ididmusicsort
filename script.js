@@ -14,6 +14,11 @@ const rightThumb = document.getElementById("rightThumb");
 const songContainer = document.getElementById("song-container");
 const resultDiv = document.getElementById("result");
 
+// aux row (모바일 전용 자리)
+const auxRow = document.getElementById("auxRow");
+const auxLeft = document.getElementById("auxLeft");
+const auxRight = document.getElementById("auxRight");
+
 // ===== STATE =====
 let songs = [];
 let mergeStack = [];
@@ -55,7 +60,7 @@ function setThumb(imgEl, videoId) {
 
 // (필요하면 곡별 보정값 여기서만 조정)
 function getZoom(song) {
-  // STEP IT UP: 지금은 확대 안 함 (너가 싫다 했으니 1.00)
+  // STEP IT UP: 확대 싫다 했으니 1.00
   if (song.video === "ZZ1lfi_oXto") return 1.00;
   return 1.00;
 }
@@ -72,9 +77,7 @@ function saveState() {
     leftList: leftList.slice(),
     rightList: rightList.slice(),
     resultList: resultList.slice(),
-    currentComparison,
-    // 버튼 위치도 되돌리기 위해 현재 모바일 배치 여부 저장해도 되지만
-    // 여기서는 restore 후 placeAuxButtons()로 다시 정렬해줌
+    currentComparison
   });
 }
 
@@ -90,26 +93,26 @@ function restoreState(state) {
   resultDiv.innerHTML = "";
 
   showCompare();
-  placeAuxButtons(); // ✅ 복원 후 모바일/PC 배치 다시 정렬
+  placeAuxButtons(); // 복원 후 모바일/PC 배치 다시 정렬
 }
 
-// ===== 모바일에서 tie/undo를 A 아래/B 아래로 이동 =====
+// ===== 모바일에서 tie/undo를 "분리된 줄(auxRow)"로 이동 =====
 function placeAuxButtons() {
   const isMobile = window.matchMedia("(max-width: 700px)").matches;
 
-  const leftCard = document.querySelector(".leftSong");
-  const rightCard = document.querySelector(".rightSong");
   const middle = document.querySelector(".middle");
   const vs = document.getElementById("vs");
 
-  if (!leftCard || !rightCard || !middle || !vs) return;
+  if (!middle || !vs || !tieBtn || !undoBtn) return;
 
   if (isMobile) {
-    // 모바일: A 아래 / B 아래로 이동
-    leftCard.appendChild(tieBtn);
-    rightCard.appendChild(undoBtn);
+    // 모바일: auxRow 표시 + 분리된 줄로 이동
+    if (auxRow) auxRow.style.display = "grid";
+    if (auxLeft) auxLeft.appendChild(tieBtn);
+    if (auxRight) auxRight.appendChild(undoBtn);
   } else {
-    // PC: middle로 원복 (tie 위, VS 가운데, undo 아래)
+    // PC: auxRow 숨김 + middle로 원복
+    if (auxRow) auxRow.style.display = "none";
     middle.insertBefore(tieBtn, vs);
     middle.appendChild(undoBtn);
   }
@@ -130,7 +133,7 @@ startBtn.onclick = () => {
   currentComparison = 0;
 
   startSort();
-  placeAuxButtons(); // ✅ 시작 시 배치
+  placeAuxButtons();
 };
 
 // ===== SORT =====
@@ -155,7 +158,6 @@ function nextMerge() {
 }
 
 function showCompare() {
-  // 한쪽 비면 남은거 붙이고 스택으로 올림
   if (leftList.length === 0) {
     resultList = resultList.concat(rightList);
     mergeStack.push(resultList);
@@ -188,9 +190,8 @@ function showCompare() {
   rightBtn.onclick = chooseRight;
   tieBtn.onclick = chooseTie;
 
-  // undoBtn.onclick은 아래에 한 번만 걸어둔 걸 그대로 씀
-
-  placeAuxButtons(); // ✅ 화면 회전/리사이즈 등에도 안정적으로 배치
+  // undo는 한 번만 연결해둔 걸 사용
+  placeAuxButtons();
 }
 
 // ===== 선택 =====
@@ -226,6 +227,7 @@ undoBtn.onclick = () => {
 function finishSort() {
   saveState();
   songContainer.style.display = "none";
+  if (auxRow) auxRow.style.display = "none"; // 결과 화면에서는 숨김
 
   let html = `<h2 class="result-title">결과</h2>`;
 

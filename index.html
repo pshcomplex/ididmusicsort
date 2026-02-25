@@ -26,9 +26,10 @@
   <!-- 소트 화면 -->
   <div id="sortScreen" style="display:none;">
     <div id="topBar">
-      <div id="title">idid 노래 월드컵</div>
+      <div id="title">idid 노래 소트</div>
     </div>
 
+    <!-- 비교 영역 -->
     <div id="song-container">
       <div class="song leftSong">
         <img id="leftThumb" alt="left thumbnail" />
@@ -47,6 +48,14 @@
       </div>
     </div>
 
+    <!-- ✅ 모바일에서만 사용: A 아래/B 아래 “분리된 줄” -->
+    <div id="auxRow" aria-hidden="true">
+      <div id="auxLeft"></div>
+      <div class="auxSpacer"></div>
+      <div id="auxRight"></div>
+    </div>
+
+    <!-- 결과 -->
     <div id="result"></div>
   </div>
 
