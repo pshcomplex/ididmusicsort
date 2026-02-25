@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>idid 노래 소트</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div id="startScreen">
+    <h1>idid 노래 소트</h1>
+
+    <div class="option">
+      <label>
+        <input type="checkbox" id="debutToggle" />
+        Debut's Plan 곡도 함께 소트하기
+      </label>
+    </div>
+
+    <button id="startBtn" type="button">Start</button>
+    <div class="credit">@pshcomplex</div>
+  </div>
+
+  <!-- 소트 UI: 처음엔 숨김 -->
+  <div id="sortScreen" style="display:none;">
+    <div id="song-container">
+
+      <div class="song">
+        <img id="leftThumb" alt="왼쪽 곡 썸네일" />
+        <button id="left" type="button" aria-label="왼쪽 곡 선택">왼쪽</button>
+      </div>
+
+      <div class="middle">
+        <button id="tie" type="button">둘 다 좋음</button>
+        <div id="vs">VS</div>
+        <button id="undo" type="button">이전 선택 취소</button>
+      </div>
+
+      <div class="song">
+        <img id="rightThumb" alt="오른쪽 곡 썸네일" />
+        <button id="right" type="button" aria-label="오른쪽 곡 선택">오른쪽</button>
+      </div>
+
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
