@@ -85,6 +85,7 @@ h1 {
   aspect-ratio: 1/1;
   object-fit: cover;
   object-position: center 35%;
+  border-radius: 16px;
 }
 
 /* ===== 선택 버튼 ===== */
@@ -127,19 +128,21 @@ h1 {
   width: 140px;
   height: 40px;
   border-radius: 999px;
-  border: none;
-  background: #e9feff;
+
+  background: white;
+  border: none;                     /* 🔥 테두리 제거 */
+  color: #111;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);  /* 🔥 핵심 */
+
   cursor: pointer;
-  color: #000000;
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
-#tie:hover {
-  background: #cfffff;
-}
-
-#undo:hover {
-  background: #ffdede;
+/* hover */
+#tie:hover, #undo:hover {
+  transform: translateY(-2px);      /* 살짝 떠오름 */
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
 /* ===== 결과 ===== */
@@ -157,8 +160,29 @@ h1 {
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
+#topBar {
+  width: min(1000px, 90%);
+  margin: 24px auto 12px;
+  text-align: center;
+}
+
+#title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+
+
 /* ===== 모바일 ===== */
 @media (max-width: 700px) {
+
+  #topBar{
+    margin: 14px auto 8px;
+  }
+  #title{
+    font-size: 18px;
+  }
 
   #song-container {
     display: flex;
@@ -216,4 +240,5 @@ h1 {
   display:block;
   margin: 0 auto 10px;
   cursor:pointer;
+  border-radius: 16px;
 }

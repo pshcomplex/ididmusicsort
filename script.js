@@ -41,11 +41,7 @@ function estimateTotalComparisons(n) {
   return Math.ceil(n * Math.log2(Math.max(2, n)));
 }
 
-function updateProgress() {
-  if (progressEl) {
-    progressEl.innerText = `${currentComparison} / ${totalComparisons}`;
-  }
-}
+function updateProgress() {}
 
 function openYouTube(videoId) {
   window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank");
