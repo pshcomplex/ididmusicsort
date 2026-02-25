@@ -29,6 +29,9 @@ let resultList = [];
 let currentComparison = 0;
 let history = [];
 
+// ✅ 결과 화면 진입 여부 (결과에서는 보조버튼 재배치 금지)
+let isFinished = false;
+
 // ===== UTIL =====
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -39,7 +42,11 @@ function shuffle(array) {
 }
 
 function openYouTube(videoId) {
-  window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank", "noopener,noreferrer");
+  window.open(
+    `https://www.youtube.com/watch?v=${videoId}`,
+    "_blank",
+    "noopener,noreferrer"
+  );
 }
 
 // 썸네일: maxres 먼저 시도 → 실패하면 hq
@@ -60,14 +67,14 @@ function setThumb(imgEl, videoId) {
 
 // (필요하면 곡별 보정값 여기서만 조정)
 function getZoom(song) {
-  // STEP IT UP: 확대 싫다 했으니 1.00
+  // STEP IT UP 확대 싫다 했으니 1.00
   if (song.video === "ZZ1lfi_oXto") return 1.00;
   return 1.00;
 }
 
 // ===== Undo =====
 function cloneStack(stack) {
-  return stack.map(group => group.slice());
+  return stack.map((group) => group.slice());
 }
 
 function saveState() {
@@ -77,11 +84,14 @@ function saveState() {
     leftList: leftList.slice(),
     rightList: rightList.slice(),
     resultList: resultList.slice(),
-    currentComparison
+    currentComparison,
   });
 }
 
 function restoreState(state) {
+  // ✅ 결과에서 되돌리면 다시 소트 화면
+  isFinished = false;
+
   songs = state.songs.slice();
   mergeStack = cloneStack(state.mergeStack);
   leftList = state.leftList.slice();
@@ -93,11 +103,17 @@ function restoreState(state) {
   resultDiv.innerHTML = "";
 
   showCompare();
-  placeAuxButtons(); // 복원 후 모바일/PC 배치 다시 정렬
+  placeAuxButtons();
 }
 
 // ===== 모바일에서 tie/undo를 "분리된 줄(auxRow)"로 이동 =====
 function placeAuxButtons() {
+  // ✅ 결과 화면에서는 절대 auxRow를 다시 켜지 않게
+  if (isFinished) {
+    if (auxRow) auxRow.style.display = "none";
+    return;
+  }
+
   const isMobile = window.matchMedia("(max-width: 700px)").matches;
 
   const middle = document.querySelector(".middle");
@@ -120,6 +136,9 @@ function placeAuxButtons() {
 
 // ===== START =====
 startBtn.onclick = () => {
+  // ✅ 시작하면 결과 상태 해제
+  isFinished = false;
+
   const includeDP = document.getElementById("debutToggle").checked;
   songs = includeDP ? ididSongs.concat(debutSongs) : [...ididSongs];
 
@@ -139,7 +158,7 @@ startBtn.onclick = () => {
 // ===== SORT =====
 function startSort() {
   songs = shuffle(songs);
-  mergeStack = songs.map(song => [song]);
+  mergeStack = songs.map((song) => [song]);
   nextMerge();
 }
 
@@ -164,6 +183,7 @@ function showCompare() {
     nextMerge();
     return;
   }
+
   if (rightList.length === 0) {
     resultList = resultList.concat(leftList);
     mergeStack.push(resultList);
@@ -190,7 +210,7 @@ function showCompare() {
   rightBtn.onclick = chooseRight;
   tieBtn.onclick = chooseTie;
 
-  // undo는 한 번만 연결해둔 걸 사용
+  // undo는 아래에 한 번만 연결해둔 걸 그대로 사용
   placeAuxButtons();
 }
 
@@ -226,8 +246,12 @@ undoBtn.onclick = () => {
 // ===== 결과 (1위만 썸네일) =====
 function finishSort() {
   saveState();
+
+  // ✅ 결과 화면 상태로 전환
+  isFinished = true;
+
   songContainer.style.display = "none";
-  if (auxRow) auxRow.style.display = "none"; // 결과 화면에서는 숨김
+  if (auxRow) auxRow.style.display = "none"; // ✅ 결과에선 숨김
 
   let html = `<h2 class="result-title">결과</h2>`;
 
@@ -268,26 +292,26 @@ window.addEventListener("resize", placeAuxButtons);
 
 // ===== DATA =====
 const ididSongs = [
-  { title:"제멋대로 찬란하게", video:"gBqJn6Fv_ng" },
-  { title:"SLOW TIDE", video:"Etjt37iz7B0" },
-  { title:"STEP IT UP", video:"ZZ1lfi_oXto" },
-  { title:"ImPerfect", video:"RlqKNM0_8dI" },
-  { title:"So G.oo.D (네가 미치도록 좋아)", video:"PYKpzl-pJ1w" },
-  { title:"STICKY BOMB", video:"x7Xy2_IB7sE" },
-  { title:"꿈을 꿰뚫는 순간(飛必沖天)", video:"icDYjPpsgyw" },
-  { title:"꽃피울 CROWN", video:"RpK0jo9pLOs" },
-  { title:"PUSH BACK", video:"dnZU-t8Cm0o" },
-  { title:"Heaven Smiles", video:"S6ZZ0Z0neyo" }
+  { title: "제멋대로 찬란하게", video: "gBqJn6Fv_ng" },
+  { title: "SLOW TIDE", video: "Etjt37iz7B0" },
+  { title: "STEP IT UP", video: "ZZ1lfi_oXto" },
+  { title: "ImPerfect", video: "RlqKNM0_8dI" },
+  { title: "So G.oo.D (네가 미치도록 좋아)", video: "PYKpzl-pJ1w" },
+  { title: "STICKY BOMB", video: "x7Xy2_IB7sE" },
+  { title: "꿈을 꿰뚫는 순간(飛必沖天)", video: "icDYjPpsgyw" },
+  { title: "꽃피울 CROWN", video: "RpK0jo9pLOs" },
+  { title: "PUSH BACK", video: "dnZU-t8Cm0o" },
+  { title: "Heaven Smiles", video: "S6ZZ0Z0neyo" },
 ];
 
 const debutSongs = [
-  { title:"I'm OK, You're OK", video:"NaJi2yT56P0" },
-  { title:"DWN", video:"BqUDcsArEyQ" },
-  { title:"New A.G.K.", video:"bfMe-OqZ0sc" },
-  { title:"Battle Scars", video:"EERhax2pooU" },
-  { title:"우주를 이대로", video:"Or6YYQlHIY8" },
-  { title:"편지가 된 일기", video:"08NOySx8O6U" },
-  { title:"Balla", video:"CCTizL5L2h8" },
-  { title:"둘만 아는 PASSWORD", video:"ozxWMi3a2tU" },
-  { title:"STEP UP", video:"21NHeLirR68" }
+  { title: "I'm OK, You're OK", video: "NaJi2yT56P0" },
+  { title: "DWN", video: "BqUDcsArEyQ" },
+  { title: "New A.G.K.", video: "bfMe-OqZ0sc" },
+  { title: "Battle Scars", video: "EERhax2pooU" },
+  { title: "우주를 이대로", video: "Or6YYQlHIY8" },
+  { title: "편지가 된 일기", video: "08NOySx8O6U" },
+  { title: "Balla", video: "CCTizL5L2h8" },
+  { title: "둘만 아는 PASSWORD", video: "ozxWMi3a2tU" },
+  { title: "STEP UP", video: "21NHeLirR68" },
 ];
