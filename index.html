@@ -8,7 +8,7 @@
 </head>
 
 <body>
-
+  <!-- 시작 화면 -->
   <div id="startScreen">
     <h1>idid 노래 소트</h1>
 
@@ -19,33 +19,32 @@
       </label>
     </div>
 
-    <button id="startBtn" type="button">Start</button>
+    <button id="startBtn">Start</button>
     <div class="credit">@pshcomplex</div>
   </div>
 
-  <!-- 소트 UI: 처음엔 숨김 -->
+  <!-- 소트 화면 -->
   <div id="sortScreen" style="display:none;">
     <div id="topBar">
-       <div id="title">idid 노래 소트</div>
-      </div>
-    <div id="song-container">
+      <div id="title">idid 노래 월드컵</div>
+    </div>
 
-      <div class="song">
-        <img id="leftThumb" alt="왼쪽 곡 썸네일" />
-        <button id="left" type="button" aria-label="왼쪽 곡 선택">왼쪽</button>
+    <div id="song-container">
+      <div class="song leftSong">
+        <img id="leftThumb" alt="left thumbnail" />
+        <button id="left"></button>
       </div>
 
       <div class="middle">
-        <button id="tie" type="button">둘 다 좋음</button>
+        <button id="tie">둘 다 좋음</button>
         <div id="vs">VS</div>
-        <button id="undo" type="button">이전 선택 취소</button>
+        <button id="undo">이전 선택 취소</button>
       </div>
 
-      <div class="song">
-        <img id="rightThumb" alt="오른쪽 곡 썸네일" />
-        <button id="right" type="button" aria-label="오른쪽 곡 선택">오른쪽</button>
+      <div class="song rightSong">
+        <img id="rightThumb" alt="right thumbnail" />
+        <button id="right"></button>
       </div>
-
     </div>
 
     <div id="result"></div>

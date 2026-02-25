@@ -1,21 +1,14 @@
-/* ===== 기본 ===== */
+/* ===== Base ===== */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   background: #f7f8fb;
-  color: #222;
+  color: #111;
   text-align: center;
 }
 
-/* ===== 제목 ===== */
-h1 {
-  margin-top: 40px;
-  font-size: 36px;
-  font-weight: 700;
-}
-
-/* ===== 시작 화면 ===== */
+/* ===== Start Screen ===== */
 #startScreen {
   position: fixed;
   inset: 0;
@@ -24,94 +17,122 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 18px;
+  padding: 20px;
+  z-index: 10;
+}
+
+#startScreen h1 {
+  font-size: 34px;
+  font-weight: 800;
+  margin: 0 0 10px;
+}
+
+.option {
+  font-size: 16px;
+  color: #222;
 }
 
 #startBtn {
-  padding: 14px 40px;
+  padding: 14px 44px;
   font-size: 18px;
   border-radius: 999px;
   border: none;
-  background: linear-gradient(135deg, #58f4ff, #7eeaff);
-  color: #00363a;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(88, 244, 255, 0.3);
-  font-weight: 600;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 #startBtn:hover {
   transform: translateY(-2px);
-}
-
-/* ===== 옵션 ===== */
-.option {
-  font-size: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
 
 .credit {
   position: absolute;
-  bottom: 18px;
+  bottom: 16px;
   font-size: 12px;
   color: #888;
 }
 
-/* ===== 컨테이너 ===== */
-#song-container {
-  margin: 40px auto;
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  gap: 24px;
-  width: min(1000px, 90%);
-}
-
-/* ===== 카드 ===== */
-.song {
-  flex: 1;
-  background: white;
-  border-radius: 18px;
-  padding: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-
+/* ===== Sort Screen Wrapper ===== */
+#sortScreen {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  padding: 18px 0 40px;
 }
 
-/* ===== 썸네일 ===== */
+/* ===== Top Title ===== */
+#topBar {
+  width: min(1000px, 90%);
+  margin: 10px auto 14px;
+}
+
+#title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+/* ===== Compare Area ===== */
+#song-container {
+  width: min(1000px, 90%);
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 18px;
+}
+
+/* Song cards */
+.song {
+  flex: 1;
+  background: #fff;
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden; /* 썸네일 확대 대비 */
+}
+
+/* Thumbnails */
 .song img {
   width: 100%;
   aspect-ratio: 1/1;
   object-fit: cover;
   object-position: center 35%;
   border-radius: 16px;
+  cursor: pointer;
 }
 
-/* ===== 선택 버튼 ===== */
+/* A/B 선택 버튼 (연한 카드형) */
 #left, #right {
   width: 100%;
-  padding: 16px;
+  padding: 14px 12px;
   border-radius: 12px;
   border: 2px solid #e6f9fb;
-  background: white;
-  font-size: 16px;
-  cursor: pointer;
+  background: #fff;
   color: #222;
+  font-size: 15px;
   font-weight: 500;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-/* hover 시만 민트 강조 */
 #left:hover, #right:hover {
-  border-color: #58f4ff;
-  background: #f4feff;
-  color: #007c84;
+  border-color: rgba(88, 244, 255, 0.7);
+  background: rgba(88, 244, 255, 0.08);
   transform: translateY(-2px);
 }
 
-/* ===== 가운데 ===== */
+/* Middle */
 .middle {
+  width: 140px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -120,125 +141,136 @@ h1 {
 
 #vs {
   font-size: 28px;
-  font-weight: bold;
+  font-weight: 900;
+  opacity: 0.8;
 }
 
-/* ===== tie / undo ===== */
+/* tie/undo: 테두리 없이 그림자만 (너가 원한 그 느낌) */
 #tie, #undo {
   width: 140px;
   height: 40px;
   border-radius: 999px;
-
-  background: white;
-  border: none;                     /* 🔥 테두리 제거 */
+  border: none;
+  background: #fff;
   color: #111;
-
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);  /* 🔥 핵심 */
-
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-/* hover */
 #tie:hover, #undo:hover {
-  transform: translateY(-2px);      /* 살짝 떠오름 */
+  transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
-/* ===== 결과 ===== */
+#tie:active, #undo:active {
+  transform: scale(0.96);
+}
+
+/* ===== Result ===== */
 #result {
-  width: min(500px, 90%);
-  margin: 40px auto;
+  width: min(520px, 90%);
+  margin: 30px auto 0;
   text-align: center;
+}
+
+.result-title {
+  margin: 20px 0;
+  font-size: 22px;
+  font-weight: 900;
 }
 
 .result-item {
   margin: 10px 0;
   padding: 12px;
-  border-radius: 12px;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
 }
 
-#topBar {
-  width: min(1000px, 90%);
-  margin: 24px auto 12px;
-  text-align: center;
+.result-item .rank {
+  font-weight: 800;
 }
 
-#title {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+.result-item .name {
+  margin-top: 4px;
 }
 
+/* 1위 카드 */
+.top1-card {
+  padding: 16px 12px 14px;
+}
 
+.top1-rank {
+  font-weight: 900;
+  margin-bottom: 10px;
+}
 
-/* ===== 모바일 ===== */
+.top1-name {
+  font-weight: 800;
+  margin-top: 10px;
+}
+
+/* 1위 썸네일 정방형 크롭 + 둥글게 */
+.top1-thumb {
+  width: min(320px, 80%);
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: center 35%;
+  border-radius: 16px;
+  display: block;
+  margin: 0 auto;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.10);
+}
+
+/* ===== Mobile ===== */
 @media (max-width: 700px) {
-
-  #topBar{
-    margin: 14px auto 8px;
-  }
-  #title{
+  #title {
     font-size: 18px;
   }
 
+  /* 선택창을 화면 가운데 느낌으로 */
+  #sortScreen {
+    padding-top: 14px;
+  }
+
   #song-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;   /* 🔥 줄바꿈 방지 핵심 */
-    gap: 6px;
+    width: min(520px, 96vw);
+    gap: 8px;
     padding: 0 6px;
+    flex-wrap: nowrap;
   }
 
-  /* 왼쪽/오른쪽 카드 */
   .song {
-    flex: 1;
-    padding: 6px;
-  }
-
-  /* 썸네일 줄이기 */
-  .song img {
-    width: 100%;
-    aspect-ratio: 1/1;
-  }
-
-  /* 버튼 줄이기 */
-  #left, #right {
     padding: 8px;
-    font-size: 12px;
-    line-height: 1.2;
+    gap: 8px;
   }
 
-  /* 가운데 영역 강제 축소 */
+  /* 모바일에서 버튼 글자 길면 터지니까 ... 처리 */
+  #left, #right {
+    padding: 10px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .middle {
-    width: 50px;        /* 🔥 핵심 */
-    min-width: 50px;
-    padding: 4px;
-    gap: 4px;
+    width: 60px;
+    gap: 6px;
   }
 
   #vs {
-    font-size: 14px;
+    font-size: 16px;
   }
 
-  #tie, #undo {
-    width: 50px;
-    height: 28px;
-    font-size: 9px;
+  /* 모바일에서는 tie/undo가 A/B 아래로 옮겨지므로 폭 100% */
+  .leftSong #tie,
+  .rightSong #undo {
+    width: 100%;
+    height: 34px;
+    font-size: 11px;
+    margin-top: 6px;
   }
-}
-
-/* 1위 썸네일 정방형 크롭 */
-.top1-thumb{
-  width: min(320px, 80%);
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  object-position: center 35%;
-  border-radius: 14px;
-  display:block;
-  margin: 0 auto 10px;
-  cursor:pointer;
-  border-radius: 16px;
 }

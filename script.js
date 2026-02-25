@@ -14,8 +14,6 @@ const rightThumb = document.getElementById("rightThumb");
 const songContainer = document.getElementById("song-container");
 const resultDiv = document.getElementById("result");
 
-const progressEl = document.getElementById("progress");
-
 // ===== STATE =====
 let songs = [];
 let mergeStack = [];
@@ -23,9 +21,7 @@ let leftList = [];
 let rightList = [];
 let resultList = [];
 
-let totalComparisons = 0;
 let currentComparison = 0;
-
 let history = [];
 
 // ===== UTIL =====
@@ -37,18 +33,14 @@ function shuffle(array) {
   return array;
 }
 
-function estimateTotalComparisons(n) {
-  return Math.ceil(n * Math.log2(Math.max(2, n)));
-}
-
-function updateProgress() {}
-
 function openYouTube(videoId) {
-  window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank");
+  window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank", "noopener,noreferrer");
 }
 
-// ===== 썸네일 fallback =====
+// 썸네일: maxres 먼저 시도 → 실패하면 hq
 function setThumb(imgEl, videoId) {
+  if (!imgEl || !videoId) return;
+
   const maxres = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
   const hq = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 
@@ -61,10 +53,11 @@ function setThumb(imgEl, videoId) {
   };
 }
 
-// ===== STEP IT UP 보정 =====
+// (필요하면 곡별 보정값 여기서만 조정)
 function getZoom(song) {
+  // STEP IT UP: 지금은 확대 안 함 (너가 싫다 했으니 1.00)
   if (song.video === "ZZ1lfi_oXto") return 1.00;
-  return 1;
+  return 1.00;
 }
 
 // ===== Undo =====
@@ -79,7 +72,9 @@ function saveState() {
     leftList: leftList.slice(),
     rightList: rightList.slice(),
     resultList: resultList.slice(),
-    currentComparison
+    currentComparison,
+    // 버튼 위치도 되돌리기 위해 현재 모바일 배치 여부 저장해도 되지만
+    // 여기서는 restore 후 placeAuxButtons()로 다시 정렬해줌
   });
 }
 
@@ -95,7 +90,29 @@ function restoreState(state) {
   resultDiv.innerHTML = "";
 
   showCompare();
-  updateProgress();
+  placeAuxButtons(); // ✅ 복원 후 모바일/PC 배치 다시 정렬
+}
+
+// ===== 모바일에서 tie/undo를 A 아래/B 아래로 이동 =====
+function placeAuxButtons() {
+  const isMobile = window.matchMedia("(max-width: 700px)").matches;
+
+  const leftCard = document.querySelector(".leftSong");
+  const rightCard = document.querySelector(".rightSong");
+  const middle = document.querySelector(".middle");
+  const vs = document.getElementById("vs");
+
+  if (!leftCard || !rightCard || !middle || !vs) return;
+
+  if (isMobile) {
+    // 모바일: A 아래 / B 아래로 이동
+    leftCard.appendChild(tieBtn);
+    rightCard.appendChild(undoBtn);
+  } else {
+    // PC: middle로 원복 (tie 위, VS 가운데, undo 아래)
+    middle.insertBefore(tieBtn, vs);
+    middle.appendChild(undoBtn);
+  }
 }
 
 // ===== START =====
@@ -104,16 +121,16 @@ startBtn.onclick = () => {
   songs = includeDP ? ididSongs.concat(debutSongs) : [...ididSongs];
 
   startScreen.style.display = "none";
-  if (sortScreen) sortScreen.style.display = "block";
+  sortScreen.style.display = "flex";
 
   songContainer.style.display = "flex";
   resultDiv.innerHTML = "";
 
   history = [];
   currentComparison = 0;
-  totalComparisons = estimateTotalComparisons(songs.length);
 
   startSort();
+  placeAuxButtons(); // ✅ 시작 시 배치
 };
 
 // ===== SORT =====
@@ -138,13 +155,13 @@ function nextMerge() {
 }
 
 function showCompare() {
+  // 한쪽 비면 남은거 붙이고 스택으로 올림
   if (leftList.length === 0) {
     resultList = resultList.concat(rightList);
     mergeStack.push(resultList);
     nextMerge();
     return;
   }
-
   if (rightList.length === 0) {
     resultList = resultList.concat(leftList);
     mergeStack.push(resultList);
@@ -152,8 +169,8 @@ function showCompare() {
     return;
   }
 
-  let left = leftList[0];
-  let right = rightList[0];
+  const left = leftList[0];
+  const right = rightList[0];
 
   leftBtn.innerText = left.title;
   rightBtn.innerText = right.title;
@@ -171,7 +188,9 @@ function showCompare() {
   rightBtn.onclick = chooseRight;
   tieBtn.onclick = chooseTie;
 
-  updateProgress();
+  // undoBtn.onclick은 아래에 한 번만 걸어둔 걸 그대로 씀
+
+  placeAuxButtons(); // ✅ 화면 회전/리사이즈 등에도 안정적으로 배치
 }
 
 // ===== 선택 =====
@@ -203,20 +222,20 @@ undoBtn.onclick = () => {
   restoreState(history.pop());
 };
 
-// ===== 결과 =====
+// ===== 결과 (1위만 썸네일) =====
 function finishSort() {
   saveState();
   songContainer.style.display = "none";
 
-  let html = `<h2 style="margin:20px 0;">결과</h2>`;
+  let html = `<h2 class="result-title">결과</h2>`;
 
   songs.forEach((song, index) => {
     if (index === 0) {
       html += `
-        <div class="result-item">
-          <div style="font-weight:800; margin-bottom:10px;">🥇 1위</div>
-          <img id="top1" class="top1-thumb">
-          <div style="font-weight:700;">${song.title}</div>
+        <div class="result-item top1-card">
+          <div class="top1-rank">🥇 1위</div>
+          <img id="top1" class="top1-thumb" alt="${song.title}">
+          <div class="top1-name">${song.title}</div>
         </div>
       `;
       return;
@@ -224,24 +243,26 @@ function finishSort() {
 
     html += `
       <div class="result-item">
-        <div><b>${index + 1}위</b></div>
-        <div>${song.title}</div>
+        <div class="rank"><b>${index + 1}위</b></div>
+        <div class="name">${song.title}</div>
       </div>
     `;
   });
 
   resultDiv.innerHTML = html;
 
-  // 1위 썸네일 처리
   const top1 = songs[0];
   const img = document.getElementById("top1");
-
-  setThumb(img, top1.video);
-  img.style.transform = `scale(${getZoom(top1)})`;
-  img.onclick = () => openYouTube(top1.video);
-
-  updateProgress();
+  if (img && top1) {
+    setThumb(img, top1.video);
+    img.style.transform = `scale(${getZoom(top1)})`;
+    img.onclick = () => openYouTube(top1.video);
+  }
 }
+
+// ===== 반응형 배치 이벤트 =====
+window.addEventListener("load", placeAuxButtons);
+window.addEventListener("resize", placeAuxButtons);
 
 // ===== DATA =====
 const ididSongs = [
