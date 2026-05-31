@@ -302,6 +302,8 @@ const ididSongs = [
   { title: "꽃피울 CROWN", video: "RpK0jo9pLOs" },
   { title: "PUSH BACK", video: "dnZU-t8Cm0o" },
   { title: "Heaven Smiles", video: "S6ZZ0Z0neyo" },
+  { title: "FLY!", video: "BwNMuQ9Kb6s" },
+  { title: "Attent!on", video: "rmiMxwtpErI" },
 ];
 
 const debutSongs = [
